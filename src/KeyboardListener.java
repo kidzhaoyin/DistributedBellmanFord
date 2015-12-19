@@ -22,6 +22,10 @@ public class KeyboardListener implements Runnable {
 	}
 	
 	public void run() {
+		ConcurrentHashMap<String, Float> dv = client.getDistanceVector();
+		ConcurrentHashMap<String, String> next = client.getNextNode();
+        SendingThread sendingThread = client.getSendingThread();
+        
 		while(true) {
 			String input = in.nextLine();
 			String[] arr = input.split("\\s+");
@@ -32,7 +36,11 @@ public class KeyboardListener implements Runnable {
 					continue;
 				}
 				try {
-					client.getSendingThread().link(arr[1] + ":" + arr[2], 0);
+					String id = arr[1] + ":" + arr[2];
+                    client.selfInitLinkDown(id);
+                    sendingThread.link(id, 0);
+                    sendingThread.sendDistanceVec();
+
 				} catch (IOException e) {
 					System.err.println("error sending message.");
 					e.printStackTrace();
@@ -46,7 +54,11 @@ public class KeyboardListener implements Runnable {
 					continue;
 				}
 				try {
-					client.getSendingThread().link(arr[1] + ":" + arr[2], 1);
+                    String id = arr[1] + ":" + arr[2];
+                    client.selfInitLinkUp(id);
+                    sendingThread.link(id, 1);
+                    sendingThread.sendDistanceVec();
+					//client.getSendingThread().link(arr[1] + ":" + arr[2], 1);
 				} catch (IOException e) {
 					System.err.println("error sending message.");
 					e.printStackTrace();
@@ -54,7 +66,7 @@ public class KeyboardListener implements Runnable {
 			}
 			
 			else if (arr[0].equalsIgnoreCase("SHOWRT")) {
-				printRoutingTable();
+				printRoutingTable(dv, next);
 			}
 			
 			else if (arr[0].equalsIgnoreCase("CLOSE")) {
@@ -69,9 +81,9 @@ public class KeyboardListener implements Runnable {
 		}
 	} //end of run method
 	
-	public void printRoutingTable() {
-		ConcurrentHashMap<String, Float> dv = client.getDistanceVector();
-		ConcurrentHashMap<String, String> next = client.getNextNode();
+	public void printRoutingTable(ConcurrentHashMap<String, Float> dv, ConcurrentHashMap<String, String> next) {
+		//ConcurrentHashMap<String, Float> dv = client.getDistanceVector();
+		//ConcurrentHashMap<String, String> next = client.getNextNode();
 		Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a ");
         String formattedDate = sdf.format(date);

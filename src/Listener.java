@@ -209,6 +209,7 @@ public class Listener implements Runnable{
 		//set the dis to mentioned neighbor to infinity
 		vector.put(id, Float.POSITIVE_INFINITY);
 		next.remove(id);
+		System.out.println("changed dis to " + id + " to positive infinite");
 		//set the dis to the nodes with mentioned neighbor as the first hop to infinity
 		for (String key : next.keySet()) {
 			if (next.get(key).equals(id)) {

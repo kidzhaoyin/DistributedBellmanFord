@@ -136,6 +136,43 @@ public class bfclient {
 		timer = new Timer();
 		timer.schedule(task, timeout, timeout);
 	}
+    
+    //link down initialized by user keyboard input
+    public void selfInitLinkDown(String id) {
+        if (!neighbors.containsKey(id)) {
+            System.out.println("Cannot link down unknow neighbor.");
+            return;
+        }
+        
+        neighbors.get(id).disconnect();
+        
+        this.dv.put(id, Float.POSITIVE_INFINITY);
+        this.neighbors.get(id).disconnect();
+        this.next.remove(id);
+        
+        for (String key : this.next.keySet()) {
+            if (next.get(key).equals(id)) {
+                dv.put(key, Float.POSITIVE_INFINITY);
+                next.remove(key);
+            }
+        }
+    }
+    
+    //link up initialized by user keyboard input
+    public void selfInitLinkUp(String id) {
+        
+        if (!neighbors.containsKey(id)) {
+            System.out.println("Unknown neighbor.");
+            return;
+        }
+        
+        neighbors.get(id).connect();
+        
+        if(neighbors.get(id).getDistance() < dv.get(id)) {
+            dv.put(id, neighbors.get(id).getDistance());
+            next.put(id, id);
+        }
+    }
 	
 	
 	public static void main(String[] args) throws IOException {
