@@ -108,6 +108,10 @@ public class bfclient {
 	public SendingThread getSendingThread() {
 		return this.sendingThread;
 	}
+    
+    public boolean isConnected() {
+        return this.connected;
+    }
 	
 	
 	public void run() throws IOException {
@@ -128,6 +132,8 @@ public class bfclient {
 		}
 		
 		sock.close();
+        timer.cancel();
+        return;
 	}
 	
 	//schedule a TimerTask sends every <timeout>*1000 seconds
@@ -221,6 +227,8 @@ public class bfclient {
 		
 		//start listen socket and keep listening for incoming message until CLOSE
 		me.run();
+        if (!me.isConnected())
+            return;
 		
 
 	} //end of main class

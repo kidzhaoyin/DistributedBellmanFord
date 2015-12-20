@@ -56,6 +56,7 @@ public class SendingThread implements Runnable {
 			DatagramPacket sendPack = 
 					new DatagramPacket(buf, buf.length, InetAddress.getByName(ip), port);
 			socket.send(sendPack);
+            System.out.println("sent dv to : " + ip);
 		}
 	}
 	
@@ -72,5 +73,14 @@ public class SendingThread implements Runnable {
 				new DatagramPacket(buf, buf.length, InetAddress.getByName(ip), port);
 		socket.send(sendPack);
 	}
+    
+    public void sendClose() throws IOException{
+        ConcurrentHashMap<String, Neighbor> neighbors = client.getNeighbors();
+        for(String neighbor : neighbors.keySet()) {
+            if (neighbors.get(neighbor).isConnected()) {
+                link(neighbor, 0);
+            }
+        }
+    }
 	
 }

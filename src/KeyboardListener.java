@@ -37,9 +37,9 @@ public class KeyboardListener implements Runnable {
 				}
 				try {
 					String id = arr[1] + ":" + arr[2];
-                    client.selfInitLinkDown(id);
-                    sendingThread.link(id, 0);
-                    sendingThread.sendDistanceVec();
+                    			client.selfInitLinkDown(id);
+                    			sendingThread.link(id, 0);
+                    			sendingThread.sendDistanceVec();
 
 				} catch (IOException e) {
 					System.err.println("error sending message.");
@@ -54,10 +54,10 @@ public class KeyboardListener implements Runnable {
 					continue;
 				}
 				try {
-                    String id = arr[1] + ":" + arr[2];
-                    client.selfInitLinkUp(id);
-                    sendingThread.link(id, 1);
-                    sendingThread.sendDistanceVec();
+                    			String id = arr[1] + ":" + arr[2];
+                    			client.selfInitLinkUp(id);
+                    			sendingThread.link(id, 1);
+                    			sendingThread.sendDistanceVec();
 					//client.getSendingThread().link(arr[1] + ":" + arr[2], 1);
 				} catch (IOException e) {
 					System.err.println("error sending message.");
@@ -70,7 +70,13 @@ public class KeyboardListener implements Runnable {
 			}
 			
 			else if (arr[0].equalsIgnoreCase("CLOSE")) {
-				client.close();
+                try {
+                    client.getSendingThread().sendClose();
+                } catch (IOException e) {
+                    //do nothing
+                }
+                client.close();
+                System.exit(1);
 				break;
 			}
 			
@@ -85,15 +91,14 @@ public class KeyboardListener implements Runnable {
 		//ConcurrentHashMap<String, Float> dv = client.getDistanceVector();
 		//ConcurrentHashMap<String, String> next = client.getNextNode();
 		Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a ");
-        String formattedDate = sdf.format(date);
-        System.out.println(formattedDate + " " + "Distance vector list is:");
+        	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a ");
+        	String formattedDate = sdf.format(date);
+        	System.out.println(formattedDate + " " + "Distance vector list is:");
         
-        for (String id : dv.keySet()) {
-        	System.out.println("Destination = " + id +
+        	for (String id : dv.keySet()) {
+        		System.out.println("Destination = " + id +
         			", Cost = " + dv.get(id) + " Link = (" + next.get(id) + ")");
-        }
-        
+        	}
 	}
 	
 }
